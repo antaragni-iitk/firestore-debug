@@ -147,7 +147,7 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.register = function () {
         var _this = this;
         this.auth.signInWithPopup(new firebase_app__WEBPACK_IMPORTED_MODULE_1__["auth"].GoogleAuthProvider()).then(function (res) {
-            return res.additionalUserInfo.isNewUser ? _this.db.collection('fbusers').add({
+            return res.additionalUserInfo.isNewUser ? _this.db.collection('fbusers').doc(res.uid.toString()).set({
                 uid: res.user.uid,
                 name: res.additionalUserInfo.profile.name,
                 email: {

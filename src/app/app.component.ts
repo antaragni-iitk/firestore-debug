@@ -50,7 +50,7 @@ export class AppComponent implements OnInit {
 
   register() {
     this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((res: any) =>
-      res.additionalUserInfo.isNewUser ? this.db.collection('fbusers').doc(res.uid.toString()).set({
+      res.additionalUserInfo.isNewUser ? this.db.doc(`fbusers/${res.uid}`).set({
         uid: res.user.uid,
         name: res.additionalUserInfo.profile.name,
         email: {

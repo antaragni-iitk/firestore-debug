@@ -79,7 +79,10 @@ function View_AppComponent_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE
     } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["register"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](2, 0, null, null, 1, "button", [], null, [[null, "click"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("click" === en)) {
         var pd_0 = (_co.verifydoc() !== false);
         ad = (pd_0 && ad);
-    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["verify"]))], null, null); }
+    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["verify"])), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](4, 0, null, null, 1, "button", [], null, [[null, "click"]], function (_v, en, $event) { var ad = true; var _co = _v.component; if (("click" === en)) {
+        var pd_0 = (_co.logout() !== false);
+        ad = (pd_0 && ad);
+    } return ad; }, null, null)), (_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵted"](-1, null, ["logout"]))], null, null); }
 function View_AppComponent_Host_0(_l) { return _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵvid"](0, [(_l()(), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵeld"](0, 0, null, null, 1, "app-root", [], null, null, null, View_AppComponent_0, RenderType_AppComponent)), _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵdid"](1, 114688, null, 0, _app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"], [], null, null)], function (_ck, _v) { _ck(_v, 1, 0); }, null); }
 var AppComponentNgFactory = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵccf"]("app-root", _app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"], View_AppComponent_Host_0, {}, {}, []);
 
@@ -122,7 +125,7 @@ var AppComponent = /** @class */ (function () {
         this.auth.onAuthStateChanged(function (user) {
             if (user) {
                 console.log('requesting data at fbusers/' + user.uid);
-                _this.db.doc("fbusers/" + user.uid).get(function (doc) {
+                _this.db.doc("fbusers/" + user.uid).get().then(function (doc) {
                     if (doc.exists) {
                         console.log('data: ', doc.data());
                     }
@@ -136,6 +139,9 @@ var AppComponent = /** @class */ (function () {
             }
         });
     };
+    AppComponent.prototype.logout = function () {
+        this.auth.signOut();
+    };
     AppComponent.prototype.verifydoc = function () {
         this.db.collection('fbusers').get().then(function (docs) {
             docs.forEach(function (doc) {
@@ -147,7 +153,7 @@ var AppComponent = /** @class */ (function () {
     AppComponent.prototype.register = function () {
         var _this = this;
         this.auth.signInWithPopup(new firebase_app__WEBPACK_IMPORTED_MODULE_1__["auth"].GoogleAuthProvider()).then(function (res) {
-            return res.additionalUserInfo.isNewUser ? _this.db.collection('fbusers').doc(res.uid.toString()).set({
+            return res.additionalUserInfo.isNewUser ? _this.db.doc("fbusers/" + res.user.uid).set({
                 uid: res.user.uid,
                 name: res.additionalUserInfo.profile.name,
                 email: {
@@ -163,7 +169,7 @@ var AppComponent = /** @class */ (function () {
                     picture: res.additionalUserInfo.profile.picture ? res.additionalUserInfo.profile.picture : '',
                     birthday: res.additionalUserInfo.profile.birthday ? res.additionalUserInfo.profile.birthday : ''
                 },
-            }).then(function () { return console.log('register complete'); }).catch(function (err) { return console.log(err); }) : console.log('already loggedin');
+            }).then(function () { return console.log('register complete'); }).catch(function (err) { return console.log(err); }) : console.log('already registered as user');
         });
     };
     return AppComponent;

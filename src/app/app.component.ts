@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
     this.auth.onAuthStateChanged((user) => {
       if (user) {
         console.log('requesting data at fbusers/' + user.uid);
-        this.db.doc(`fbusers/${user.uid}`).get((doc) => {
+        this.db.doc(`fbusers/${user.uid}`).get().then(function (doc) {
           if (doc.exists) {
             console.log('data: ', doc.data());
           } else {
@@ -38,7 +38,9 @@ export class AppComponent implements OnInit {
       }
     });
   }
-
+  logout(){
+    this.auth.signOut();
+  }
   verifydoc() {
     this.db.collection('fbusers').get().then((docs) => {
       docs.forEach(function (doc) {
@@ -50,7 +52,7 @@ export class AppComponent implements OnInit {
 
   register() {
     this.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).then((res: any) =>
-      res.additionalUserInfo.isNewUser ? this.db.doc(`fbusers/${res.uid}`).set({
+      res.additionalUserInfo.isNewUser ? this.db.doc(`fbusers/${res.user.uid}`).set({
         uid: res.user.uid,
         name: res.additionalUserInfo.profile.name,
         email: {
@@ -66,6 +68,6 @@ export class AppComponent implements OnInit {
           picture: res.additionalUserInfo.profile.picture ? res.additionalUserInfo.profile.picture : '',
           birthday: res.additionalUserInfo.profile.birthday ? res.additionalUserInfo.profile.birthday : ''
         },
-      }).then(() => console.log('register complete')).catch((err) => console.log(err)) : console.log('already loggedin'));
+      }).then(() => console.log('register complete')).catch((err) => console.log(err)) : console.log('already registered as user'));
   }
 }
